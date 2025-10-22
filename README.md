@@ -11,8 +11,15 @@ This utility allows to convert them to XML which funnily makes it more readable 
 
 ## CLI
 
+### Install
+
 ```sh
-$ go install github.com/tiborvass/tmpl2xml/cmd/tmpl2xml@latest
+go install github.com/tiborvass/tmpl2xml/cmd/tmpl2xml@latest
+```
+
+### Usage
+
+```sh
 $ cat go_template.tmpl
 Hello {{if .Cond}}world{{else}}friend{{end}}!
 $ tmpl2xml go_template.tmpl
