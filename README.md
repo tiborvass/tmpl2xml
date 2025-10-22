@@ -13,6 +13,8 @@ This utility allows to convert them to XML which funnily makes it more readable 
 
 ```sh
 $ go install github.com/tiborvass/tmpl2xml/cmd/tmpl2xml@latest
+$ cat go_template.tmpl
+Hello {{if .Cond}}world{{else}}friend{{end}}!
 $ tmpl2xml go_template.tmpl
 ```
 
