@@ -16,6 +16,23 @@ $ go install github.com/tiborvass/tmpl2xml/cmd/tmpl2xml@latest
 $ tmpl2xml go_template.tmpl
 ```
 
+```xml
+<defines>
+  <define>
+    <text>"Hello "</text>
+    <if cond=".Cond">
+      <then>
+        <text>"world"</text>
+      </then>
+      <else>
+        <text>"friend"</text>
+      </else>
+    </if>
+    <text>"!\n"</text>
+  </define>
+</defines>
+```
+
 ## Library
 
 ```sh
