@@ -35,7 +35,7 @@ type nodeElse struct {
 type nodeIf struct {
 	XMLName xml.Name  `xml:"if"`
 	Pipe    string    `xml:"cond,attr,omitempty"`
-	List    *nodeThen `xml:"then,omitempty"`
+	Then    nodeThen  `xml:"then"`
 	Else    *nodeElse `xml:"else,omitempty"`
 }
 
@@ -45,21 +45,20 @@ type nodeAction struct {
 }
 
 type nodeList struct {
-	XMLName xml.Name `xml:"list"`
-	List    []any
+	List []any `xml:",innerxml"`
 }
 
 type nodeRange struct {
 	XMLName xml.Name  `xml:"range"`
 	Pipe    string    `xml:"pipe,attr,omitempty"`
-	List    *nodeList `xml:"list,omitempty"`
+	List    []any     `xml:",innerxml"`
 	Else    *nodeElse `xml:"else,omitempty"`
 }
 
 type nodeWith struct {
 	XMLName xml.Name  `xml:"with"`
 	Pipe    string    `xml:"pipe,attr,omitempty"`
-	List    *nodeList `xml:"list,omitempty"`
+	List    []any     `xml:",innerxml"`
 	Else    *nodeElse `xml:"else,omitempty"`
 }
 
@@ -102,28 +101,22 @@ func convert(n parse.Node, mode EscapeMode) any {
 	case *parse.ActionNode:
 		return nodeAction{Pipe: x.Pipe.String()}
 	case *parse.RangeNode:
-		v := nodeRange{Pipe: x.Pipe.String()}
-		if x.List != nil {
-			v.List = &nodeList{List: listToAny(x.List, mode)}
-		}
+		v := nodeRange{Pipe: x.Pipe.String(), List: listToAny(x.List, mode)}
 		if x.ElseList != nil {
 			v.Else = &nodeElse{List: listToAny(x.ElseList, mode)}
 		}
 		return v
 	case *parse.IfNode:
-		v := nodeIf{Pipe: x.Pipe.String()}
+		v := nodeIf{Pipe: x.Pipe.String(), Then: nodeThen{List: listToAny(x.List, mode)}}
 		if x.List != nil {
-			v.List = &nodeThen{List: listToAny(x.List, mode)}
+			v.Then = nodeThen{List: listToAny(x.List, mode)}
 		}
 		if x.ElseList != nil {
 			v.Else = &nodeElse{List: listToAny(x.ElseList, mode)}
 		}
 		return v
 	case *parse.WithNode:
-		v := nodeWith{Pipe: x.Pipe.String()}
-		if x.List != nil {
-			v.List = &nodeList{List: listToAny(x.List, mode)}
-		}
+		v := nodeWith{Pipe: x.Pipe.String(), List: listToAny(x.List, mode)}
 		if x.ElseList != nil {
 			v.Else = &nodeElse{List: listToAny(x.ElseList, mode)}
 		}
